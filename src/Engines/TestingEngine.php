@@ -104,7 +104,9 @@ class TestingEngine extends Engine
             return ($a['lev'] < $b['lev']) ? -1 : 1;
         });
 
-        return $results;
+        return [
+            'hits' => $results
+        ];
     }
 
     /**
@@ -140,7 +142,24 @@ class TestingEngine extends Engine
      */
     public function map($results, $model)
     {
-        return Collection::make();
+        if (count($results['hits']) === 0) {
+            return Collection::make();
+        }
+
+        $keys = collect($results['hits'])
+                        ->pluck('id')->values()->all();
+
+        $models = $model->whereIn(
+            $model->getQualifiedKeyName(), $keys
+        )->get()->keyBy($model->getKeyName());
+
+        return Collection::make($results['hits'])->map(function ($hit) use ($model, $models) {
+            $key = $hit['id'];
+
+            if (isset($models[$key])) {
+                return $models[$key];
+            }
+        })->filter();
     }
 
     /**
