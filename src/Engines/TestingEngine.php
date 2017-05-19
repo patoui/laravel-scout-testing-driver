@@ -65,7 +65,7 @@ class TestingEngine extends Engine
             });
             // Filter only searchable items
             if (! empty($current->searchable)) {
-                $temp = Arr::only($temp, $current->searchable);
+                $temp = Arr::only($temp, $current['searchable']);
             }
             // Placeholder for property Levenshtein value
             $propLev = -1;
@@ -98,10 +98,10 @@ class TestingEngine extends Engine
 
         // Sort array based on Levenshtein value (ascending)
         uasort($results, function ($a, $b) {
-            if ($a->lev == $b->lev) {
+            if ($a['lev'] == $b['lev']) {
                 return 0;
             }
-            return ($a->lev < $b->lev) ? -1 : 1;
+            return ($a['lev'] < $b['lev']) ? -1 : 1;
         });
 
         return $results;
