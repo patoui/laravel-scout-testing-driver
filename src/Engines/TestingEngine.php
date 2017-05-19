@@ -91,7 +91,7 @@ class TestingEngine extends Engine
             // Object had property with valid Levenshtein value,
             // add it to the results
             if ($propLev !== -1 && $propLev <= 10) {
-                $current->lev = $propLev;
+                $current['lev'] = $propLev;
                 $results[] = $current;
             }
         }

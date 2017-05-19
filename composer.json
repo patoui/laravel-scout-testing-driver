@@ -1,6 +1,6 @@
 {
     "name": "patoui/laravel-scout-testing-driver",
-    "description": "Driver for Laravel Scout to ease testing",
+    "description": "In memory driver for Laravel Scout to make testing easy",
     "keywords": [
         "testing",
         "search",
