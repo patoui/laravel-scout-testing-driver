@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Filesystem\Filesystem;
 use Laravel\Scout\Builder;
 use PatOui\Scout\Engines\TestingEngine;
 
@@ -9,30 +10,47 @@ class TestingEngineTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         Mockery::close();
+        $filesystem = new Filesystem;
+        if ($filesystem->exists('./file.json')) {
+            $filesystem->delete('./file.json');
+        }
     }
 
     public function testUpdateAddsObjectsToIndex()
     {
         // Arrange
-        $engine = new TestingEngine;
+        $engine = new TestingEngine(
+            new Filesystem,
+            [
+                'testing' => [
+                    'storage' => './file.json'
+                ]
+            ]
+        );
         $model = [
             'id' => 123,
             'title' => 'My Awesome Title',
             'searchable' => ['title']
         ];
-        $this->assertTrue(empty($engine->data));
 
         // Act
         $engine->update(Collection::make([$model]));
 
         // Assert
-        $this->assertTrue(! empty($engine->data));
+        $this->assertTrue(! empty($engine->getFile(true)));
     }
 
     public function testSearchReturnsExpectedResult()
     {
         // Arrange
-        $engine = new TestingEngine;
+        $engine = new TestingEngine(
+            new Filesystem,
+            [
+                'testing' => [
+                    'storage' => './file.json'
+                ]
+            ]
+        );
         $model = [
             'id' => 101,
             'title' => 'Awesome Title',
@@ -57,6 +75,6 @@ class TestingEngineTest extends PHPUnit_Framework_TestCase
 
         // Assert
         $this->assertTrue(! empty($results));
-        $this->assertCount(2, $results);
+        $this->assertCount(2, $results['hits']);
     }
 }

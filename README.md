@@ -38,7 +38,7 @@ composer update patoui/laravel-scout-testing-driver
 Add the following to your AppServicerProvider@register method:
 
 ```php
-if ($this->app->environment('testing')) {
+if ($this->app->environment('dusk', 'testing')) {
     $this->app->register(\PatOui\Scout\TestingScoutServiceProvider::class);
 }
 ```
