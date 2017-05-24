@@ -185,7 +185,7 @@ class TestingEngine extends Engine
         $file = $this->getStoragePath();
 
         // Check if file/directory is writable
-        if ($this->filesystem->isWritable($file)) {
+        if (! $this->filesystem->isWritable($file)) {
             throw new \Exception("File at storage specified '$file' is not writable");
         }
 
